@@ -3,6 +3,7 @@
 mod types;
 mod align;
 mod conversion;
+mod decoding;
 
 use types::{TPL, TextureFormat, FilterMode, WrapMode};
 use binrw::prelude::*;

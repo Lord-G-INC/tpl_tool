@@ -24,3 +24,4 @@ Cargo.lock
 .vscode
 *.tpl
 *.png
+tpl_tool.zip
