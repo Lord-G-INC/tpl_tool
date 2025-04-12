@@ -9,14 +9,14 @@ use binrw::prelude::*;
 
 
 impl TPL {
-    pub fn from_path<A: AsRef<Path>>(path: A, format: TextureFormat, filter: FilterMode, wrap: WrapMode) -> image::ImageResult<Self> {
+    pub fn from_path<A: AsRef<Path>>(path: A, format: TextureFormat, min_filter: MinFilter, mag_filter: MagFilter, wrap_s: WrapMode, wrap_t: WrapMode) -> image::ImageResult<Self> {
         let data = std::fs::read(path)?;
         let fmt = image::guess_format(&data)?;
         let image = image::load(Cursor::new(data), fmt)?;
         let image = image.into_rgba8();
-        Ok(Self::from_rgba_image(image, format, filter, wrap))
+        Ok(Self::from_rgba_image(image, format, min_filter, mag_filter, wrap_s, wrap_t))
     }
-    pub fn from_rgba_image(image: RgbaImage, format: TextureFormat, filter: FilterMode, wrap: WrapMode) -> Self {
+    pub fn from_rgba_image(image: RgbaImage, format: TextureFormat, min_filter: MinFilter, mag_filter: MagFilter, wrap_s: WrapMode, wrap_t: WrapMode) -> Self {
         let mut result = Self::default();
         result.header.image_count = 1;
         result.header.image_offset = 0x0C;
@@ -27,10 +27,10 @@ impl TPL {
         new_image.image_header.image_data_offset = 64;
         new_image.offset.image_header_offset = 20;
         new_image.image_header.format = format;
-        new_image.image_header.min_filter = filter;
-        new_image.image_header.mag_filter = filter;
-        new_image.image_header.wrap_s = wrap;
-        new_image.image_header.wrap_t = wrap;
+        new_image.image_header.min_filter = min_filter;
+        new_image.image_header.mag_filter = mag_filter;
+        new_image.image_header.wrap_s = wrap_s;
+        new_image.image_header.wrap_t = wrap_t;
         let encoded = 
         encode(new_image.image_header.image_format(), image.as_raw(), image.width(), image.height());
         result.image_datas.insert(64, encoded);

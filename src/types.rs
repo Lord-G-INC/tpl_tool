@@ -76,7 +76,16 @@ pub enum WrapMode {
 #[derive(Debug, Default, Clone, Copy, BinRead, BinWrite, ValueEnum, Display)]
 #[brw(big, repr = u32)]
 #[clap(rename_all = "verbatim")]
-pub enum FilterMode {
+pub enum MagFilter {
+    Nearest,
+    #[default]
+    Linear
+}
+
+#[derive(Debug, Default, Clone, Copy, BinRead, BinWrite, ValueEnum, Display)]
+#[brw(big, repr = u32)]
+#[clap(rename_all = "verbatim")]
+pub enum MinFilter {
     Nearest,
     #[default]
     Linear,
@@ -116,8 +125,8 @@ pub struct ImageHeader {
     pub image_data_offset: u32,
     pub wrap_s: WrapMode,
     pub wrap_t: WrapMode,
-    pub min_filter: FilterMode,
-    pub mag_filter: FilterMode,
+    pub min_filter: MinFilter,
+    pub mag_filter: MagFilter,
     pub lod_bias: f32,
     pub edge_lod_enable: u8,
     pub min_lod: u8,
